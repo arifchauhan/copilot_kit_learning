@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createAgent } from "langchain";
 import {
-  copilotkitMiddleware,
+  createCopilotkitMiddleware,
   CopilotKitStateSchema,
   zodState,
 } from "@copilotkit/sdk-js/langgraph";
@@ -33,7 +33,11 @@ export const graph = createAgent({
   model,
   tools: [query_data, ...todo_tools, generate_a2ui, search_flights],
   middleware: [
-    copilotkitMiddleware,
+    createCopilotkitMiddleware({
+      a2uiParams: {
+        defaultCatalogId: "copilotkit://app-dashboard-catalog",
+      },
+    }),
     stateStreamingMiddleware(
       stateItem({
         stateKey: "todos",

@@ -40,11 +40,13 @@ This also installs the agent dependencies via `npm install` inside `agent/`.
 cp .env.example .env
 ```
 
-Then edit the `.env` file and add your OpenAI API key:
+Then edit the `.env` file (see `.env.example`) and add your OpenAI API key:
 
 ```bash
 OPENAI_API_KEY=your-openai-api-key-here
 ```
+
+For a map of how CopilotKit is wired in this repo, see [docs/COPILOTKIT_SETUP.md](docs/COPILOTKIT_SETUP.md).
 
 3. Start the development server:
 
@@ -132,8 +134,8 @@ The following scripts can also be run using your preferred package manager:
 │   │   ├── a2ui_fixed_schema.ts # Fixed-schema A2UI tool (flights)
 │   │   └── a2ui_dynamic_schema.ts # Dynamic-schema A2UI tool
 │   └── langgraph.json
-├── scripts/                     # Agent run scripts
-│   └── run-agent.sh / .bat
+├── scripts/                     # Agent launcher + health check
+│   └── run-agent.mjs
 ├── public/                      # Static assets
 ├── next.config.ts
 ├── tsconfig.json
@@ -227,11 +229,30 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ### Agent Connection Issues
 
-If you see "I'm having trouble connecting to my tools", make sure:
+**`ERR_CONNECTION_REFUSED` on `http://127.0.0.1:8123`** (or chat says it cannot reach tools) means the LangGraph dev server is not running. The Next.js app on port 3000 does **not** include the agent unless you start both:
 
-1. The LangGraph agent is running on port 8123
-2. Your OpenAI API key is set correctly
-3. Both servers started successfully
+```bash
+npm run dev
+```
+
+Agent only (second terminal while UI is already up):
+
+```bash
+npm run dev:agent
+```
+
+Check the agent:
+
+```bash
+npm run agent:health
+```
+
+When healthy, `http://127.0.0.1:8123/info` returns **200** (LangGraph API — not a human-facing page).
+
+Also verify:
+
+1. Your OpenAI API key is set in `.env`
+2. `AGENT_URL=http://127.0.0.1:8123` matches the agent bind address (default in `scripts/run-agent.mjs`)
 
 ### Agent Dependencies
 

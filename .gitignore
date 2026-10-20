@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -19,9 +19,13 @@ node_modules
 
 # production
 /build
+dist/
 
 # misc
 .DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 *.pem
 
 # debug
@@ -41,14 +45,22 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# turbo / caches
+.turbo
 
-# LangGraph API
-.langgraph_api
+# editors (local)
+.idea/
+
+# LangGraph dev server state (root and agent/)
+.langgraph_api/
 
 # Added by CopilotKit CLI: browser snapshots a coding agent writes.
 .playwright-mcp/
 
-# CopilotKit local credentials and onboarding state (not app source)
-.copilotkit/keys/
-.copilotkit/onboarding/
-.copilotkit/proof/
+# CopilotKit local state — commit only .copilotkit/project.json (Intelligence project binding)
+.copilotkit/*
+!.copilotkit/project.json
+
+# CopilotKit agent skills: commit skills-lock.json + .agents/skills/ (or reinstall via
+# `npx copilotkit@latest skills install`). Ignore IDE-specific duplicate copies.
+.claude/skills/

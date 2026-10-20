@@ -14,7 +14,6 @@ const CUSTOM_CATALOG_ID = "copilotkit://app-dashboard-catalog";
 
 const renderA2uiSchema = z.object({
   surfaceId: z.string(),
-  catalogId: z.string(),
   components: z.array(z.record(z.any())),
   data: z.record(z.any()).optional(),
 });
@@ -70,13 +69,12 @@ export const generate_a2ui = tool(
 
     const args = toolCalls[0].args as {
       surfaceId?: string;
-      catalogId?: string;
       components?: unknown[];
       data?: Record<string, unknown>;
     };
 
     const surfaceId = args.surfaceId ?? "dynamic-surface";
-    const catalogId = args.catalogId ?? CUSTOM_CATALOG_ID;
+    const catalogId = CUSTOM_CATALOG_ID;
     const components = args.components ?? [];
     const data = args.data ?? {};
 

@@ -6,6 +6,7 @@ import {
 } from "@copilotkit/runtime/v2";
 import { createDefaultAgent } from "@/agent";
 import { APP_DASHBOARD_CATALOG_ID } from "@/lib/a2ui-catalog-id";
+import { serverA2uiInlineSchema } from "@/lib/a2ui/server-catalog-schema";
 import { handle } from "hono/vercel";
 
 const defaultAgent = createDefaultAgent();
@@ -36,16 +37,21 @@ const runtime = new CopilotRuntime({
   a2ui: {
     injectA2UITool: false,
     defaultCatalogId: APP_DASHBOARD_CATALOG_ID,
+    schema: serverA2uiInlineSchema,
   },
-  mcpApps: {
-    servers: [
-      {
-        type: "http",
-        url: process.env.MCP_SERVER_URL || "https://mcp.excalidraw.com/mcp",
-        serverId: "example_mcp_app",
-      },
-    ],
-  },
+  ...(process.env.MCP_SERVER_URL
+    ? {
+        mcpApps: {
+          servers: [
+            {
+              type: "http" as const,
+              url: process.env.MCP_SERVER_URL,
+              serverId: "example_mcp_app",
+            },
+          ],
+        },
+      }
+    : {}),
 });
 
 const app = createCopilotEndpoint({
